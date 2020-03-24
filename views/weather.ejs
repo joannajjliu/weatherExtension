@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+    <!-- <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"> -->
+    <!-- Local CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+    <form action="/" method="POST" class="searchByCity">
+        <label for="cityInput">City Name:</label>
+        <input id="cityInput" type="text" name="cityName">
+        <!-- <button type="submit">Go</button> -->
+
+        <button type="submit" class="btn btn-default">
+            <span class="glyphicon glyphicon-search"></span> Search
+        </button>
+    </form>
+    <br />
+
+    <form action="/" method="POST" name="formCoord">
+        <input id="coord" type="hidden" name="coord">
+        <label class="switch">
+            <input type="checkbox" 
+            id="myCheck" 
+            onclick="clickCheckbox()",
+            <%= checked %>
+            >
+            <span class="slider round">
+            </span>
+        </label>
+        <p id="demo"></p>
+    </form>
+
+    <script>
+        let x = document.getElementById("demo");
+        let checkBox = document.getElementById("myCheck"); // Get the checkbox
+
+        function clickCheckbox() {
+            
+            // If the checkbox is checked, display the output text
+            if (checkBox.checked == true) {
+                console.log("checked reached");
+                getLocation();
+            } else {
+            }
+        };
+
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        document.getElementById("coord").value = position.coords.latitude + "," + position.coords.longitude;
+                        document.formCoord.submit();
+                        console.log("Position:", position.latitude);
+                    },
+                    function(posError) {
+                        console.log("PositionError:", posError);
+                        x.innerHTML = "Geolocation is not supported by this browser.";
+                    }, {
+                        timeout: 10000
+                    }
+                ); 
+            } else {
+                x.innerHTML = "Geolocation is not supported by this browser.";
+            }
+        }
+    </script>
+    <% if (location) { %>
+        <h2>
+            <center>
+                The weather in
+                <%= location %> today is:  
+            </center>              
+        </h2>
+        <center>
+        <table>
+            <tr>
+                <td>
+                    <h3>
+                            <%= temp %> degrees Celsius
+                            <br >
+                            <br >
+                            <%= description %>
+                    </h3>
+                </td>
+                <td>
+                    <img src=<%=iconImage %> alt="weather icon">
+                </td>
+            </tr>
+        </table>
+        </center>
+        <% } %>
+            <!-- res.write(`<h1>The temperature in ${location} is ${temp} degrees Celsius</h1>`);
+    res.write(`<h3>The weather can be described as ${description}</h3>`);
+    res.write(`<img src=${iconImage} alt="weather icon">`);
+    res.send(); -->
+
+</body>
+
+</html>
