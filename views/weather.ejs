@@ -54,7 +54,6 @@
             
             // If the checkbox is checked, display the output text
             if (checkBox.checked == true) {
-                console.log("checked reached");
                 getLocation();
             } else {
             }
@@ -66,7 +65,6 @@
                     function(position) {
                         document.getElementById("coord").value = position.coords.latitude + "," + position.coords.longitude;
                         document.formCoord.submit();
-                        console.log("Position:", position.latitude);
                     },
                     function(posError) {
                         console.log("PositionError:", posError);

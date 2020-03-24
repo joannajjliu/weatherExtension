@@ -46,21 +46,17 @@ app.get("/", (req, res) => {
 });
 
 app.post("/", (req, res) => {
-    console.log("server consoling starts here")
     const coord = req.body.coord;
     const cityName = req.body.cityName;
     const pokeId = '';
 
     const apiKey = process.env.WEATHER_API_KEY;
-    console.log("apiKey:", apiKey);
-    console.log("pokemonMap:", pokemonMap.get("50n"));
     const unit = "metric";
     let url = `https://api.openweathermap.org/data/2.5/weather?q="Toronto"&appid=${apiKey}&units=${unit}`;
     let pokemonUrl = `https://pokeres.bastionbot.org/images/pokemon/${pokeId}.png`;
     
     if (coord) {
         checked = "checked";
-        console.log(req.body.coord);
         const coordArr = coord.split(",");
         const lat = coordArr[0];
         const lon = coordArr[1];
@@ -68,7 +64,6 @@ app.post("/", (req, res) => {
     };
     if (cityName) {
         checked = "";
-        console.log(req.body.cityName);
         const query = req.body.cityName;
         url = `https://api.openweathermap.org/data/2.5/weather?q=${query}&appid=${apiKey}&units=${unit}`;
     };
@@ -79,14 +74,12 @@ app.post("/", (req, res) => {
             res.redirect("/");
         })
         response.on("data", (data) => {
-            // console.log(data);
             const weatherData = JSON.parse(data);
-            console.log("weatherData:", weatherData);
             if (weatherData.cod == 200) {
                 location = weatherData.name;
                 temp = weatherData.main.temp;
                 description = weatherData.weather[0].description;
-                const iconCode = weatherData.weather[0].icon;
+                const iconCode = weatherData.weather[0].icon
                 console.log("iconCode:", iconCode);
                 // iconImage = `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
                 iconImage = `https://pokeres.bastionbot.org/images/pokemon/${pokemonMap.get(iconCode)}.png`;
@@ -98,6 +91,8 @@ app.post("/", (req, res) => {
     });
 });
 
-app.listen(3000, () => {
-    console.log("Weather app is running on port 3000");
+const portUsed = process.env.PORT || 3000; //heroku assigned port or port 3000
+
+app.listen(portUsed, () => {
+    console.log(`server is running on port ${portUsed}`);
 });
