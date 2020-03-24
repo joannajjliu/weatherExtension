@@ -1,6 +1,7 @@
 const express = require("express");
 const https = require("https");
 const bodyParser = require("body-parser");
+const dotenv = require("dotenv/config");
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -13,6 +14,26 @@ let temp = '';
 let description = '';
 let iconImage = '';
 let checked = '';
+let pokemonMap = new Map ([
+    ["01d", "192"],
+    ["01n", "338"],
+    ["02d", "333"],
+    ["02n", "334"],
+    ["03d", "147"],
+    ["03n", "148"],
+    ["04d", "278"],
+    ["04n", "284"],
+    ["09d", "270"],
+    ["09n", "350"],
+    ["10d", "535"],
+    ["10n", "382"],
+    ["11d", "135"],
+    ["11n", "145"],
+    ["13d", "872"],
+    ["13n", "144"],
+    ["50d", "468"],
+    ["50n", "868"]
+]);
 
 app.get("/", (req, res) => {
     res.render("weather", {
@@ -28,11 +49,15 @@ app.post("/", (req, res) => {
     console.log("server consoling starts here")
     const coord = req.body.coord;
     const cityName = req.body.cityName;
+    const pokeId = '';
 
-    const apiKey = "d019886d661bd65b00e4501340c76346";
+    const apiKey = process.env.WEATHER_API_KEY;
+    console.log("apiKey:", apiKey);
+    console.log("pokemonMap:", pokemonMap.get("50n"));
     const unit = "metric";
     let url = `https://api.openweathermap.org/data/2.5/weather?q="Toronto"&appid=${apiKey}&units=${unit}`;
-
+    let pokemonUrl = `https://pokeres.bastionbot.org/images/pokemon/${pokeId}.png`;
+    
     if (coord) {
         checked = "checked";
         console.log(req.body.coord);
@@ -62,7 +87,9 @@ app.post("/", (req, res) => {
                 temp = weatherData.main.temp;
                 description = weatherData.weather[0].description;
                 const iconCode = weatherData.weather[0].icon;
-                iconImage = `https://openweathermap.org/img/wn/${iconCode}@2x.png`
+                console.log("iconCode:", iconCode);
+                // iconImage = `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
+                iconImage = `https://pokeres.bastionbot.org/images/pokemon/${pokemonMap.get(iconCode)}.png`;
             };
         });
         response.on('end', () => {
