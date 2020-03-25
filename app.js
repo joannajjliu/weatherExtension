@@ -50,7 +50,7 @@ app.post("/", (req, res) => {
     const cityName = req.body.cityName;
     const pokeId = '';
 
-    const apiKey = "d019886d661bd65b00e4501340c76346";
+    const apiKey = process.env.WEATHER_API_KEY;
     const unit = "metric";
     let url = `https://api.openweathermap.org/data/2.5/weather?q="Toronto"&appid=${apiKey}&units=${unit}`;
     let pokemonUrl = `https://pokeres.bastionbot.org/images/pokemon/${pokeId}.png`;
